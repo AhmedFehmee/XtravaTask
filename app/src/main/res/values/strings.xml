@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">XtravaTask</string>
+    <string name="check_internet">Check Internet Connection</string>
+    <string name="archived_label">Archived</string>
+
+    <string name="undo_label"><u>Undo</u></string>
+</resources>
