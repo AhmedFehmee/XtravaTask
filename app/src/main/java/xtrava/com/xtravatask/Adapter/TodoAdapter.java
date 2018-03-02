@@ -63,6 +63,8 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ImgViewHolder>
 
     public void removeItem(int position) {
         itemList.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, itemList.size());
     }
 
     static class ImgViewHolder extends RecyclerView.ViewHolder {

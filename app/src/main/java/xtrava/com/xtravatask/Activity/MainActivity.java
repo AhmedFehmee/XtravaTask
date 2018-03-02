@@ -31,10 +31,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
 import com.github.angads25.toggle.LabeledSwitch;
 import com.github.angads25.toggle.interfaces.OnToggledListener;
 import com.wang.avi.AVLoadingIndicatorView;
 
+import io.fabric.sdk.android.Fabric;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,12 +85,13 @@ public class MainActivity extends AppCompatActivity {
     boolean add = false;
     Paint p = new Paint();
     AlertDialog.Builder alertDialog;
-    Boolean missionState;
+    Boolean missionState = false;
     DatabaseHandler db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
@@ -97,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         if (Utility.isNetworkAvailable(this)) {
             CallMissionService callMissionService = new CallMissionService();
             callMissionService.callTodoService(getApplicationContext(), progressFrame, todoList, todoRecycle, todoAdapter);
-            System.out.println(" from service " + db.getAllMissions().get(0).getTitle());
         } else {
             //todoList = db.getAllMissions();
             List<TodoModel> contacts = db.getAllMissions();
@@ -105,8 +107,6 @@ public class MainActivity extends AppCompatActivity {
                 todoList.add(cn);
             }
             todoRecycle.setAdapter(todoAdapter);
-            Log.i("Chased", "cashed " + todoList.get(0).getTitle());
-            //todoAdapter.notifyDataSetChanged();
             Toast.makeText(getApplicationContext(), "Cashed List", Toast.LENGTH_LONG).show();
         }
         todoRecycle.setHasFixedSize(true);
@@ -129,8 +129,6 @@ public class MainActivity extends AppCompatActivity {
                         todoList.add(cn);
                     }
                     todoRecycle.setAdapter(todoAdapter);
-                    Log.i("Chased", "cashed");
-                    //todoAdapter.notifyDataSetChanged();
                     Toast.makeText(getApplicationContext(), "Cashed List", Toast.LENGTH_LONG).show();
                 }
                 // Stop refresh animation
@@ -155,9 +153,9 @@ public class MainActivity extends AppCompatActivity {
                         DeleteMissionService deleteMissionService = new DeleteMissionService();
                         deleteMissionService.callTodoRemoveService(todoList.get(position).getId(), position, getApplicationContext(), progressFrame, todoAdapter);
                     } else {
-                        todoAdapter.notifyDataSetChanged();
                         Toast.makeText(getApplicationContext(), getString(R.string.check_internet), Toast.LENGTH_LONG).show();
                     }
+                    todoAdapter.notifyDataSetChanged();
                 } else {
                     removeView();
                     edit_position = position;

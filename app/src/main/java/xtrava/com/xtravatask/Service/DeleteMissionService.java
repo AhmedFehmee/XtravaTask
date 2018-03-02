@@ -42,7 +42,6 @@ public class DeleteMissionService {
                             JSONObject todoObject = todoArray.getJSONObject(1);
                             if (todoObject.getBoolean("ok")) {
                                 todoAdapter.removeItem(position);
-                                todoAdapter.notifyDataSetChanged();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

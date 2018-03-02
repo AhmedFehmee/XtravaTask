@@ -30,9 +30,9 @@ import xtrava.com.xtravatask.Model.TodoModel;
  */
 
 public class UpdateMissionService {
-    public void callTodoUpdateService(String todoID, final String title, final Boolean isComplete ,
-                                       final Context context, final int edit_position ,
-                                       final FrameLayout progressFrame, final TodoAdapter todoAdapter ,
+    public void callTodoUpdateService(final String todoID, final String title, final Boolean isComplete ,
+                                      final Context context, final int edit_position ,
+                                      final FrameLayout progressFrame, final TodoAdapter todoAdapter ,
                                       final ArrayList<TodoModel> todoList) {
         progressFrame.setVisibility(View.VISIBLE);
         RequestQueue queue = Volley.newRequestQueue(context);
@@ -47,11 +47,13 @@ public class UpdateMissionService {
                             if (todoObject.getString("title").equals(title)) {
                                 TodoModel todoModel = new TodoModel();
                                 todoModel.setTitle(title);
+                                todoModel.setId(todoID);
                                 if (isComplete) {
                                     todoModel.setCompleted("true");
                                 } else {
                                     todoModel.setCompleted("false");
                                 }
+                                Log.i("update",edit_position +" "+todoList.size() + " "+todoID);
                                 todoList.set(edit_position, todoModel);
                                 todoAdapter.notifyDataSetChanged();
                             }
@@ -63,6 +65,8 @@ public class UpdateMissionService {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.i("update",edit_position +" "+todoList.size() + " "+todoID);
+                Log.i("update",error + " ");
                 progressFrame.setVisibility(View.GONE);
                 Toast.makeText(context, "Check Internet Connection", Toast.LENGTH_LONG).show();
             }
